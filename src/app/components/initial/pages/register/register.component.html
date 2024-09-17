@@ -1,3 +1,63 @@
-<p>
-  register works!
-</p>
+<section class="main-container">
+  <div class="main-container__card">
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="register()"
+      class="form">
+      <mat-form-field class="form__full">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="errorMatcher"
+               placeholder="Ex. pat@example.com">
+        <mat-hint>Digite o seu e-mail!</mat-hint>
+        @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+          <mat-error>Digite um e-mail válido</mat-error>
+        }
+        @if (emailFormControl.hasError('required')) {
+          <mat-error>O Email é <strong>obrigatório</strong></mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form__full">
+        <mat-label>Nome de usuário</mat-label>
+        <input matInput [formControl]="userNameFormControl" [errorStateMatcher]="errorMatcher"
+               placeholder="Digite o nome de usuário">
+        <mat-hint>Digite o seu e-mail!</mat-hint>
+        @if (userNameFormControl.hasError('required')) {
+          <mat-error>O nome de usuário é <strong>obrigatório</strong></mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form__full">
+        <mat-label>Senha</mat-label>
+        <input type="password" matInput [formControl]="passwordFormControl" [errorStateMatcher]="errorMatcher"
+               placeholder="Digite sua senha">
+        <mat-hint>Digite a sua senha!</mat-hint>
+        @if (passwordFormControl.hasError('required')) {
+          <mat-error>A senha é <strong>obrigatória</strong></mat-error>
+        }
+        @if (passwordFormControl.hasError('minlength')) {
+          <mat-error>A senha deve ter no mínimo 6 caracteres</mat-error>
+        }
+      </mat-form-field>
+      @if (passwordFormControl.hasError('passwordStrength') && passwordFormControl.touched) {
+        <mat-error>A senha deve conter ao menos uma letra maiúscula e uma minúscula, um caracter especial e um número</mat-error>
+      }
+      <mat-form-field class="form__full">
+        <mat-label>Confirmar Senha</mat-label>
+        <input type="password" matInput [formControl]="confirmPasswordFormControl" [errorStateMatcher]="errorMatcher"
+        placeholder="Digite sua senha">
+        <mat-hint>Confirme a sua senha!</mat-hint>
+        @if (confirmPasswordFormControl.hasError('required')) {
+          <mat-error>A senha é <strong>obrigatória</strong></mat-error>
+        }
+        @if (confirmPasswordFormControl.hasError('passwordMismatch') && confirmPasswordFormControl.touched) {
+          <mat-error>As senhas não são iguais</mat-error>
+        }
+      </mat-form-field>
+      <div class="form-btn-container">
+        <button type="submit" mat-flat-button color="primary">Entrar</button>
+      </div>
+    </form>
+    <a mat-stroked-button color="primary" href="/login">Voltar</a>
+  </div>
+</section>
+
+
