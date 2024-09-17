@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -12,6 +12,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import { MyErrorStateMatcherService } from '../../../../core/services/my-error-state-matcher.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/firebase/auth.service';
+import { Subject, switchMap, takeUntil } from 'rxjs';
+import { SessionService } from '../../../../core/services/session/session.service';
+import { LoginErrors } from '../../../../core/enums/errors.enum';
 
 @Component({
   selector: 'app-login',
@@ -20,16 +24,22 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+
+  private _destroy$ = new Subject<void>();
 
   loginForm: FormGroup;
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('', [Validators.required]);
-  errorMatcher = inject(MyErrorStateMatcherService);
+
+  message: string = '';
 
   constructor(
     private _snackBar: MatSnackBar,
-    private _router: Router
+    private _router: Router,
+    public errorMatcher: MyErrorStateMatcherService,
+    private _authService: AuthService,
+    private _sessionService: SessionService
   ) {
     this.loginForm = new FormGroup({
       email: this.emailFormControl,
@@ -40,7 +50,13 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+
   login(): void {
+    const formValue = this.loginForm.value;
     if (this.loginForm.invalid) {
       this._snackBar.open('Campos Inválidos', 'Fechar', {
         duration: 2000,
@@ -49,8 +65,21 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-    console.log(this.loginForm.value);
-    this._router.navigate(['/home']);
+    this._authService.loginUser(formValue.email, formValue.password)
+      .pipe(
+        takeUntil(this._destroy$),
+        switchMap(() => this._authService.user$)
+      ).subscribe({
+        next: (user) => {
+          this._sessionService.setSession(user);
+          this._router.navigate(['/home']);
+        },
+        error: (error) => {
+          this.message = error.code === LoginErrors.InvalidLogin ? 'Credenciais inválidas' : 'Erro ao efetuar login';
+          this._snackBar.open(this.message, 'Fechar', {
+            duration: 2000,
+            horizontalPosition: 'end',
+          });
+      }});
   }
-
 }
