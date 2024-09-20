@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   Validators,
@@ -6,12 +6,16 @@ import {
   ReactiveFormsModule,
   FormGroup,
 } from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatButtonModule} from '@angular/material/button';
-import { MyErrorStateMatcherService } from '../../../../core/services/my-error-state-matcher.service';
+
 import { Router } from '@angular/router';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { MyErrorStateMatcherService } from '../../../../core/services/my-error-state-matcher.service';
 import { AuthService } from '../../../../core/services/firebase/auth.service';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 import { SessionService } from '../../../../core/services/session/session.service';
@@ -22,7 +26,14 @@ import { LoginErrors } from '../../../../core/enums/errors.enum';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButtonModule],
+  imports: [
+      FormsModule,
+      MatFormFieldModule,
+      MatInputModule,
+      ReactiveFormsModule,
+      MatButtonModule,
+      MatProgressSpinnerModule
+    ],
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
@@ -33,6 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   passwordFormControl = new FormControl('', [Validators.required]);
 
   message: string = '';
+  loading = false;
 
   constructor(
     private _snackBar: MatSnackBar,
@@ -56,6 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
+    this.loading = true;
     const formValue = this.loginForm.value;
     if (this.loginForm.invalid) {
       this._snackBar.open('Campos Inválidos', 'Fechar', {
@@ -72,10 +85,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       ).subscribe({
         next: (user) => {
           this._sessionService.setSession(user);
+          this.loading = false;
           this._router.navigate(['/home']);
         },
         error: (error) => {
           this.message = error.code === LoginErrors.InvalidLogin ? 'Credenciais inválidas' : 'Erro ao efetuar login';
+          this.loading = false;
           this._snackBar.open(this.message, 'Fechar', {
             duration: 2000,
             horizontalPosition: 'end',

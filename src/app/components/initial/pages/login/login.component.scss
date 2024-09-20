@@ -2,15 +2,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #4B0082;
+  height: 100%;
+  background-color: #051122;
+  background-image: url('../../../../../assets/img/backgorund-initial.png');
+  background-size: auto auto;
+  background-repeat: no-repeat;
+  background-position: center;
 
   &__card {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #E6E6FA;
+    background-color: #FFF2DB;
     padding: 4rem 4rem 1rem 4rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
