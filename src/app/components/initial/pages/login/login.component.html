@@ -1,6 +1,5 @@
 <section class="main-container">
   <div class="main-container__card">
-
     <form
       [formGroup]="loginForm"
       (ngSubmit)="login()"
@@ -27,13 +26,18 @@
         }
       </mat-form-field>
       <div class="form-btn-container">
-        <button type="submit" mat-flat-button color="primary">Entrar</button>
+        <button type="submit" mat-flat-button color="primary">
+          @if (loading) {
+            <mat-spinner diameter="20" class="mat-accent"></mat-spinner>
+          } @else {
+            Entrar
+          }
+        </button>
       </div>
     </form>
 
-    <a mat-stroked-button color="primary" href="/forgot-password">Esqueceu a senha?</a>
-    <a mat-stroked-button color="primary" href="/register">Não tem uma conta? Registre-se</a>
+    <a mat-button color="primary" href="/forgot-password">Esqueceu a senha?</a>
+    <a mat-button color="primary" href="/register">Não tem uma conta? Registre-se</a>
+
   </div>
 </section>
-
-
