@@ -1,0 +1,28 @@
+<header class="main-container">
+  <div class="main-container__child">
+    <div class="main-container__child__icons-container">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Menu Icon"
+        [fontIcon]="isMenuOpen ? 'menu_open' : 'menu'" class="mat-accent"
+        (click)="openMenu()">
+      </mat-icon>
+      <img
+        class="main-container__tibia-icon" src="../../../../../assets/img/Tibia_icon.png"
+        alt="Ícone Tibia"
+        [routerLink]="['/home']">
+    </div>
+    <div>
+      <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <a [routerLink]="['/user-profile']" routerLinkActive="router-link-active">
+            Meu Perfil
+          </a>
+        </button>
+        <button (click)="logout()" mat-menu-item>Sair</button>
+      </mat-menu>
+    </div>
+  </div>
+</header>
+

@@ -2,24 +2,36 @@ import { inject, Injectable } from "@angular/core";
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, user } from "@angular/fire/auth";
 import { from, Observable } from "rxjs";
 import { SessionService } from "../session/session.service";
+import { collection, doc, Firestore, setDoc } from "@angular/fire/firestore";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
 
-    firebaseAuth = inject(Auth)
+    firebaseAuth = inject(Auth);
+    fireStore = inject(Firestore);
     user$ = user(this.firebaseAuth);
     constructor(
       private _sessionService: SessionService
     ) { }
 
-    registerUser(email: string, username:string, password: string): Observable<void> {
+    registerUser(email: string, userName: string, password: string): Observable<void> {
       const promise = createUserWithEmailAndPassword(
         this.firebaseAuth,
         email,
-        password
-      ).then((response) => updateProfile(response.user, { displayName: username }));
+        password,
+      ).then((response) => {
+        return updateProfile(response.user, { displayName: userName });
+      });
+
+      return from(promise);
+    }
+
+    editUser(userId: string, additionalInfo: any): Observable<void> {
+      const collectionRef = collection(this.fireStore, 'users');
+      const userDoc = doc(collectionRef, userId);
+      const promise = setDoc(userDoc, additionalInfo, { merge: true });
 
       return from(promise);
     }
