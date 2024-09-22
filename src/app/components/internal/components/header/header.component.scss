@@ -19,6 +19,15 @@
       align-items: center;
       column-gap: 1rem;
     }
+
+    &__menu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      column-gap: 0.5rem;
+      cursor: pointer;
+      color: #FFF;
+    }
   }
 
   &__tibia-icon {

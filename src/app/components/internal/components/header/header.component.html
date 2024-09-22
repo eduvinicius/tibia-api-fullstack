@@ -4,8 +4,8 @@
       <mat-icon
         aria-hidden="false"
         aria-label="Menu Icon"
-        [fontIcon]="isMenuOpen ? 'menu_open' : 'menu'" class="mat-accent"
-        (click)="openMenu()">
+        [fontIcon]="isSideNavMenuOpen ? 'menu_open' : 'menu'" class="mat-accent"
+        (click)="openSideNavMenu()">
       </mat-icon>
       <img
         class="main-container__tibia-icon" src="../../../../../assets/img/Tibia_icon.png"
@@ -13,7 +13,17 @@
         [routerLink]="['/home']">
     </div>
     <div>
-      <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+      <div
+        #profileMenu
+        id="profileMenu"
+        appCheckClickElement
+        (clickOutside)="onProfileMenuClickOutside($event)"
+        [matMenuTriggerFor]="menu"
+        class="main-container__child__menu">
+        <p>Olá, {{ userName ? userName : 'Sem nome de usuário'}}!</p>
+        <mat-icon aria-hidden="false" aria-label="Menu Icon" [fontIcon]="isMenuProfileOpen ? 'arrow_drop_up' : 'arrow_drop_down'"></mat-icon>
+
+      </div>
       <mat-menu #menu="matMenu">
         <button mat-menu-item>
           <a [routerLink]="['/user-profile']" routerLinkActive="router-link-active">
