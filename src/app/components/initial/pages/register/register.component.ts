@@ -10,6 +10,7 @@ import { AuthService } from '../../../../core/services/firebase/auth.service';
 import { Subject, takeUntil } from 'rxjs';
 import { PasswordStrengthValidator } from '../../../../core/utils/validators/strong-password.validator';
 import { confirmPasswordValidator } from '../../../../core/utils/validators/confirm-password.validator';
+import { IRegisterForm } from '../../../../core/models/interfaces/register-form.interface';
 
 @Component({
   selector: 'app-register',
@@ -60,12 +61,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const formValue = this.registerForm.value;
+    const formValue: IRegisterForm = this.registerForm.value;
 
-    this._authService.registerUser(formValue.email, formValue.username, formValue.password)
+    this._authService.registerUser(formValue.email, formValue.userName, formValue.password)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: () => {
+      next: (res) => {
+        console.log(res);
         this._snackBar.open('Usuário cadastrado com sucesso!', 'Fechar', {
           duration: 2000,
           horizontalPosition: 'end',

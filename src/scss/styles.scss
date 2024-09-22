@@ -1,5 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'form.scss';
+@import './variables.scss';
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+a {
+  text-decoration: none;
+  color: $color-dark-brown;
+  transition: .3s;
+
+  &:hover {
+    color: $color-chocolate;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+
+  &-thumb {
+    background-color: $color-dark-brown;
+    border-radius: 4px;
+  }
+
+  &-track {
+    background-color: #f1f1f1;
+  }
+}
