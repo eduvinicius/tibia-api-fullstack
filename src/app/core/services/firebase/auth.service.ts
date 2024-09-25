@@ -46,9 +46,8 @@ export class AuthService {
       return from(promise);
     }
 
-    logout(): Observable<void> {
+    logout(): void {
       this._sessionService.clearSession();
-      return from(this.firebaseAuth.signOut());
     }
 
     isAuthenticated(): boolean {

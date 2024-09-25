@@ -1,3 +1,13 @@
-<div>
-  home works!
-</div>
+<section class="main-container">
+  <div class="main-container__carousel-container">
+    <app-carousel
+      class="main-container__carousel-container__carousel"
+      [itemsToShow]="3"
+      [items]="carouselItems"
+      [caroulselContainerWidth]="'60%'"
+      [imgsFromAssets]="true">
+    </app-carousel>
+  </div>
+</section>
+
+

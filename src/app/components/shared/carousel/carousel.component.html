@@ -1,0 +1,43 @@
+<div
+  class="carousel-container"
+  [ngClass]="{'mobile': isMobile}"
+  [style.width]="caroulselContainerWidth">
+  @if (isMobile) {
+    <button (click)="previous()" class="control-btn top">&lt;</button>
+  }
+
+  <div class="carousel-wrapper">
+    <div class="carousel" [style.transform]="getTransform()" [style.transition]="transition ? 'transform 0.5s ease' : 'none'">
+      @for (item of items; track item.title) {
+        <div class="carousel-item" [ngStyle]="{'flex': '0 0 ' + 100 / itemsToShow + '%'}">
+          <mat-card class="example-card" appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>{{ item.title }}</mat-card-title>
+              <mat-card-subtitle>{{ item.subtitle }}</mat-card-subtitle>
+            </mat-card-header>
+            <img
+              class="carousel-item__img"
+              mat-card-image
+              [src]="imgsFromAssets ? assets + item.image : item.image"
+              alt="Photo of a Shiba Inu">
+            <mat-card-content>
+              <p>
+                {{ item.description }}
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button color="primary">{{ item.link }}</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (!isMobile) {
+    <button (click)="previous()" class="control-btn left">&lt;</button>
+    <button (click)="next()" class="control-btn right">&gt;</button>
+  } @else {
+    <button *ngIf="isMobile" (click)="next()" class="control-btn bottom">&gt;</button>
+  }
+</div>
